@@ -1,28 +1,41 @@
 #!/usr/bin/python3
 
-import socket
+import socket, sys
+from queue import Queue
 
 HOST = '0.0.0.0'
 PORT = 3000
 
+address_list = []
+connections_list = []
+
+q = Queue()
+
+
 """ Open a TCP server socket """
 def create_socket() :
-    global s 
+    global objSocket
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((HOST, PORT))
-    s.listen(5)
+    try :
+        objSocket = socket.socket()
+        objSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    except socket.error() as ex :
+        print(f'Error creating Socket :{str(ex)}\n')
 
-    print(f'Server launched :: {HOST}:{PORT}')
+""" Binding SOCKET """
+def bind_socket() :
+    while :
+        try :
+            objSocket.bind((HOST, PORT))
+            objSocket.listen(20)
+            print(f'Socket Created on {HOST}:{PORT}\n')
+            break()
+        except socket.error() as ex:
+            print(f'error Binding Socket {ex}\n')
 
+""" Accept incomming connections """
+def accept_connections() :
     while True :
         conn, addr = s.accept()
-        while True :
-            data = conn.recv(50)
-            print(data)
-            if not data :
-                break
+        connections_list.append(conn)
 
-    s.close()
-
-create_socket()
