@@ -16,10 +16,12 @@ def create_socket() :
     print(f'Server launched :: {HOST}:{PORT}')
 
     while True :
-        data = s.recv(50)
-        print(data)
-        if not data :
-            break
+        conn, addr = s.accept()
+        while True :
+            data = conn.recv(50)
+            print(data)
+            if not data :
+                break
 
     s.close()
 
