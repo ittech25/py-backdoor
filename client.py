@@ -12,12 +12,8 @@ def connect() :
     s.connect((HOST, PORT))
 
     while True :
-        msg = input('\n>>> ')
-
-        if msg == 'q' :
-            s.close()
-        else :
-            s.send(msg.encode())
+        data = s.recv(4028)
+        print(data)
 
 
 connect()
