@@ -5,7 +5,7 @@ This progrom is a hidden and untrackble ***(just trying)*** backdoor for Windows
 ## TODOS :
 Currently those are tasks complited and to complite : 
 
-- [X] create proper server/client scripts
+- [x] create proper server/client scripts
 - [x] Multi-client support
 - [x] Ability to send command to all clients or specifique one.
 - [ ] Ability to run at startup
